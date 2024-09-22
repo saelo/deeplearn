@@ -3,6 +3,7 @@
 #include <cmath>
 #include <cfloat>
 #include <sstream>
+#include <string.h>
 
 #include "nn/tensor/CpuTensor.h"
 #include "nn/tensor/GpuTensor.h"

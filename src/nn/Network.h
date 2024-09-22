@@ -19,16 +19,16 @@ namespace nn {
 
 template <typename Tensor>
 class Network {
-    typedef Objective<Tensor> Objective;
-    typedef Layer<Tensor> Layer;
-    typedef Activation<Tensor> Activation;
+    typedef Objective<Tensor> ObjectiveT;
+    typedef Layer<Tensor> LayerT;
+    typedef Activation<Tensor> ActivationT;
 
   public:
-    Network(Objective* objective) : objective_(objective), final_activation_(nullptr) { }
+    Network(ObjectiveT* objective) : objective_(objective), final_activation_(nullptr) { }
 
     ~Network()
     {
-        for (Layer* layer : layers_) {
+        for (LayerT* layer : layers_) {
             delete layer;
         }
 
@@ -84,7 +84,7 @@ class Network {
 
         const Tensor* current = &input;
 
-        for (Layer* layer : layers_) {
+        for (LayerT* layer : layers_) {
             current = &layer->Forward(*current);
         }
 
@@ -120,14 +120,14 @@ class Network {
     // The caller needs to verify that the expected input shape of the
     // provided layer matches the current output shape of the network.
     // The network takes ownership of all its layers.
-    void Append(Layer* layer)
+    void Append(LayerT* layer)
     {
         Check(layers_.empty() || layer->InputTensorShape() == OutputTensorShape(), "Layer not compatible: Input tensor shape doesn't match current output tensor shape");
         layers_.push_back(layer);
     }
 
     // Appends an activation to the end of this network.
-    void Append(Activation* activation)
+    void Append(ActivationT* activation)
     {
         Check(layers_.empty() || activation->InputTensorShape() == OutputTensorShape(), "Activation not compatible: Input tensor shape doesn't match current output tensor shape");
         final_activation_ = activation;
@@ -135,13 +135,13 @@ class Network {
     }
 
     // Convenience operator to append layers to a network.
-    Network& operator<<(Layer* layer)
+    Network& operator<<(LayerT* layer)
     {
         Append(layer);
         return *this;
     }
 
-    Network& operator<<(Activation* activation)
+    Network& operator<<(ActivationT* activation)
     {
         Append(activation);
         return *this;
@@ -176,12 +176,12 @@ class Network {
 
             auto start_layer = skip_final_activation ? layers_.rbegin() + 1 : layers_.rbegin();
             for (auto it = start_layer; it != layers_.rend(); ++it) {
-                Layer* layer = *it;
+                LayerT* layer = *it;
                 gradients = &layer->Backward(*gradients);
             }
         }
 
-        for (Layer* layer : layers_) {
+        for (LayerT* layer : layers_) {
             layer->GradientDescent(batch_size, epsilon);
         }
     }
@@ -192,13 +192,13 @@ class Network {
 
     // List of all layers in this network.
     // The pointers are owned by this instance.
-    std::vector<Layer*> layers_;
+    std::vector<LayerT*> layers_;
 
     // Optimizer to use for training. Pointer is owned by this instance.
-    Objective* objective_;
+    ObjectiveT* objective_;
 
     // The final activation layer, if any.
-    Activation* final_activation_;
+    ActivationT* final_activation_;
 
     DISALLOW_COPY_AND_ASSIGN(Network);
 };
