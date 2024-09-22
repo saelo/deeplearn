@@ -12,7 +12,7 @@ size_t argmax(const CPUTensor& input)
     WARN_IF(input.rank() != 1, "argmax() called on tensor with rank > 1");
 
     float cmax = FLT_MIN;
-    uint32_t imax, i = 0;
+    uint32_t imax = 0, i = 0;
 
     for (float v : input) {
         if (v > cmax)

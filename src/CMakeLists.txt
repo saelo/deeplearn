@@ -38,6 +38,6 @@ target_compile_definitions(testsuite PRIVATE CL_TARGET_OPENCL_VERSION=120)
 
 
 # Add a #define to indicate Debug builds
-set(CMAKE_C_FLAGS_DEBUG "-g -DDEBUG -DCOPYGUARD -fsanitize=address")
-set(CMAKE_CXX_FLAGS_DEBUG "-g -DDEBUG -DCOPYGUARD -fsanitize=address")
-set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_C_FLAGS_DEBUG "-DCOPYGUARD -fsanitize=address")
+set(CMAKE_CXX_FLAGS_DEBUG "-DCOPYGUARD -fsanitize=address")
+set(CMAKE_BUILD_TYPE RelWithDebInfo)
