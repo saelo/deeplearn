@@ -147,8 +147,8 @@ network.Train(train_data_gpu, train_labels_gpu, test_data_gpu, test_labels_gpu, 
 ./fetch_mnist.sh
 
 # .. build everything ..
-mkdir build && cd build
-cmake ../
+cd src
+cmake .
 make
 
 # .. and train!
