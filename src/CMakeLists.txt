@@ -36,8 +36,6 @@ set_target_properties(testsuite PROPERTIES C_STANDARD 11
   C_EXTENSIONS OFF)
 target_compile_definitions(testsuite PRIVATE CL_TARGET_OPENCL_VERSION=120)
 
+add_compile_options(-DCOPYGUARD -fsanitize=address -pedantic -Wall)
 
-# Add a #define to indicate Debug builds
-set(CMAKE_C_FLAGS_DEBUG "-DCOPYGUARD -fsanitize=address")
-set(CMAKE_CXX_FLAGS_DEBUG "-DCOPYGUARD -fsanitize=address")
 set(CMAKE_BUILD_TYPE RelWithDebInfo)
