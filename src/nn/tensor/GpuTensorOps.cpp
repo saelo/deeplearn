@@ -77,7 +77,6 @@ GPUTensor& matvecmul(const GPUTensor& matrix, const GPUTensor& vector, GPUTensor
             vector.gpu_buffer(),
             ocl::LocalMemory(num_elements_per_thread * sizeof(float)),
             temp_out.gpu_buffer());
-    fprintf(stderr,"success=%d\n",success);
     Assert(success);
 
     success = GPUContext::kernel_manager.kernel(kMatVecMulReduceKernel)->Run(
@@ -305,10 +304,10 @@ GPUTensor& convolution(const GPUTensor& input, const GPUTensor& kernels, GPUTens
         bool success = GPUContext::kernel_manager.convolution_kernel(kernels.shape(3), kernels.shape(2))->Run(
                 WorkSize(output.shape(2), output.shape(1), output.shape(0)),
                 WorkSize(16, 16, 1),           // Kernel requires specific work group size
-                output.shape(2),
-                output.shape(1),
-                channel,
-                input.shape(0),
+                (uint32_t)(output.shape(2)),
+                (uint32_t)(output.shape(1)),
+                (uint32_t)channel,
+                (uint32_t)(input.shape(0)),
                 input.gpu_buffer(),
                 kernels.gpu_buffer(),
                 output.gpu_buffer());
@@ -331,10 +330,10 @@ GPUTensor& cross_correlation(const GPUTensor& input, const GPUTensor& kernels, G
         bool success = GPUContext::kernel_manager.cross_correlation_kernel(kernels.shape(3), kernels.shape(2))->Run(
                 WorkSize(output.shape(2), output.shape(1), output.shape(0)),
                 WorkSize(16, 16, 1),
-                output.shape(2),
-                output.shape(1),
-                channel,
-                output.shape(0),
+                (uint32_t)(output.shape(2)),
+                (uint32_t)(output.shape(1)),
+                (uint32_t)channel,
+                (uint32_t)(output.shape(0)),
                 input.gpu_buffer(),
                 kernels.gpu_buffer(),
                 output.gpu_buffer());
@@ -358,9 +357,9 @@ GPUTensor& convolution_kernel_gradients(const GPUTensor& input, const GPUTensor&
     bool success = GPUContext::kernel_manager.convolution_gradient_kernel(kernels.shape(3), kernels.shape(2))->Run(
             WorkSize(kernel_size, input.shape(0), gradients.shape(0)),
             WorkSize(kernel_size, 1, 1),
-            input.shape(2),
-            input.shape(1),
-            input.shape(0),
+            (uint32_t)(input.shape(2)),
+            (uint32_t)(input.shape(1)),
+            (uint32_t)(input.shape(0)),
             input.gpu_buffer(),
             gradients.gpu_buffer(),
             kernels.gpu_buffer());
