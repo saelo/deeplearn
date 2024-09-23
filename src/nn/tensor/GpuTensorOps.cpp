@@ -60,7 +60,7 @@ GPUTensor& matvecmul(const GPUTensor& matrix, const GPUTensor& vector, GPUTensor
     Assert(matrix.shape(1) == vector.shape(0));
 
     // Each thread processes this many elements.
-    size_t num_elements_per_thread = min((size_t)64, matrix.shape(1));
+    uint32_t num_elements_per_thread = min((size_t)64, matrix.shape(1));
 
     // This many values will be produced for each row.
     size_t entries_per_row = (matrix.shape(COL) + num_elements_per_thread - 1) / num_elements_per_thread;
@@ -70,13 +70,14 @@ GPUTensor& matvecmul(const GPUTensor& matrix, const GPUTensor& vector, GPUTensor
     bool success = GPUContext::kernel_manager.kernel(kMatVecMulKernel)->Run(
             WorkSize(entries_per_row, matrix.shape(ROW)),
             WorkSize(1, 256),               // Required by kernel
-            matrix.shape(ROW),
-            matrix.shape(COL),
+            (uint32_t)(matrix.shape(ROW)),
+            (uint32_t)(matrix.shape(COL)),
             num_elements_per_thread,
             matrix.gpu_buffer(),
             vector.gpu_buffer(),
             ocl::LocalMemory(num_elements_per_thread * sizeof(float)),
             temp_out.gpu_buffer());
+    fprintf(stderr,"success=%d\n",success);
     Assert(success);
 
     success = GPUContext::kernel_manager.kernel(kMatVecMulReduceKernel)->Run(
@@ -159,10 +160,10 @@ GPUTensor& transposed_vecmul(const GPUTensor& x, const GPUTensor& y, GPUTensor& 
 #define UNARY_OPERATION(name, kernel_name) GPUTensor& name(const GPUTensor& input, GPUTensor& output)   \
 {                                                                                                       \
     Assert(input.shape() == output.shape());                                                            \
-                                                                                                        \
+    const uint32_t s = input.size();                                                                    \
     bool success = GPUContext::kernel_manager.kernel(kernel_name)->Run(                                 \
             WorkSize(threadcount(input.size())),                                                        \
-            input.size(),                                                                               \
+            s,                                                                                          \
             input.gpu_buffer(),                                                                         \
             output.gpu_buffer());                                                                       \
     Assert(success);                                                                                    \
@@ -175,10 +176,10 @@ GPUTensor& transposed_vecmul(const GPUTensor& x, const GPUTensor& y, GPUTensor& 
 {                                                                                                       \
     Assert(x.shape() == y.shape());                                                                     \
     Assert(y.shape() == output.shape());                                                                \
-                                                                                                        \
+    const uint32_t s = x.size();                                                                        \
     bool success = GPUContext::kernel_manager.kernel(kernel_name)->Run(                                 \
             WorkSize(threadcount(x.size())),                                                            \
-            x.size(),                                                                                   \
+            s,                                                                                   \
             x.gpu_buffer(),                                                                             \
             y.gpu_buffer(),                                                                             \
             output.gpu_buffer());                                                                       \
@@ -191,10 +192,10 @@ GPUTensor& transposed_vecmul(const GPUTensor& x, const GPUTensor& y, GPUTensor& 
         float v, GPUTensor& output)                                                                     \
 {                                                                                                       \
     Assert(x.shape() == output.shape());                                                                \
-                                                                                                        \
+    const uint32_t s = x.size();                                                                        \
     bool success = GPUContext::kernel_manager.kernel(kernel_name)->Run(                                 \
             WorkSize(threadcount(x.size())),                                                            \
-            x.size(),                                                                                   \
+            s,					                                \
             x.gpu_buffer(),                                                                             \
             v,                                                                                          \
             output.gpu_buffer());                                                                       \
@@ -207,14 +208,15 @@ GPUTensor& add(const GPUTensor& x, const GPUTensor& y, float v, GPUTensor& outpu
 {
     Assert(x.shape() == y.shape());
     Assert(y.shape() == output.shape());
-
+    const uint32_t s = x.size();
     bool success = GPUContext::kernel_manager.kernel(kScaledAddKernel)->Run(
             WorkSize(threadcount(x.size())),
-            x.size(),
+            s,
             x.gpu_buffer(),
             y.gpu_buffer(),
             v,
             output.gpu_buffer());
+
     Assert(success);
 
     return output;
