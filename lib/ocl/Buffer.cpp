@@ -55,7 +55,10 @@ unique_ptr<Buffer> CLBuffer::NewView(size_t offset, size_t size)
     Assert(offset + size <= this->size());
 
     cl_int retval;
-    cl_buffer_region region = { .origin = offset, .size = size};
+    cl_buffer_region region;
+    region.origin = offset;
+    region.size = size;
+
     cl_mem sub_buffer =clCreateSubBuffer(buffer_, CL_MEM_READ_WRITE, CL_BUFFER_CREATE_TYPE_REGION, &region, &retval);
     CL_ENSURE_SUCCESS(retval, "Failed to create sub-buffer", nullptr);
 
@@ -72,7 +75,9 @@ unique_ptr<Buffer> CLBufferView::NewView(size_t offset, size_t size)
     Assert(offset + size <= this->size());
 
     cl_int retval;
-    cl_buffer_region region = { .origin = offset + offset_, .size = size};
+    cl_buffer_region region;
+    region.origin = offset + offset_;
+    region.size = size;
     cl_mem sub_buffer =clCreateSubBuffer(base_, CL_MEM_READ_WRITE, CL_BUFFER_CREATE_TYPE_REGION, &region, &retval);
     CL_ENSURE_SUCCESS(retval, "Failed to create sub-buffer", nullptr);
 
