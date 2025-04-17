@@ -14,7 +14,7 @@ using namespace std;
 using namespace nn;
 
 #define RANDOM_SIZES true
-#define NUM_REPETITIONS 1
+#define NUM_REPETITIONS 100
 
 #define RunTest(name, do_cpu, do_gpu)                                       \
     start = clock();                                                        \
