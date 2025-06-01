@@ -13,7 +13,6 @@
 using namespace std;
 using namespace nn;
 
-#define RANDOM_SIZES true
 #define NUM_REPETITIONS 100
 
 #define RunTest(name, do_cpu, do_gpu)                                       \
@@ -174,7 +173,7 @@ void RunLinearAlgebraTests()
 void RunConvolutionTests()
 {
     // We need smaller input sizes if built without optimization...
-#if DEBUG
+#if DEBUGGGG
     size_t num_features=2, num_channels=2, width=33, height=33;
 #else
     size_t num_features=64, num_channels=64, width=32, height=32;
@@ -323,15 +322,9 @@ int main(int argc, char** argv)
 
     Check(InitOpenCL(), "Failed to initialize OpenCL context");
 
-#if RANDOM_SIZES
-    small_1 = RandBetween(1, 10000);
-    small_2 = RandBetween(1, 10000);
-    large   = RandBetween(1, 500000);
-#else
     small_1 = 444;
     small_2 = 888;
     large   = 98765;
-#endif
 
     cout << "Test dimensions: small_1=" << small_1 << ", small_2=" << small_2 << ", large=" << large << endl << endl;
 
