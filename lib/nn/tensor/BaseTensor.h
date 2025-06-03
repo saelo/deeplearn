@@ -305,8 +305,9 @@ class BaseTensor {
     const double m = std::max(std::fabs(f1), std::fabs(f2));
     const double d = std::fabs(f1 - f2);
     const double maxFloat32Epsilon = kFloat32Epsilon * m;
-//    fprintf(stderr,"floatEq(%e,%e): m=%e, d=%e, maxFloat32Epsilon=%e\n",f1,f2,m,d,maxFloat32Epsilon);
-
+    const bool isOK = (d <= maxFloat32Epsilon);
+    if (!isOK)
+	fprintf(stderr,"floatEq(%e,%e): m=%e, d=%e, maxFloat32Epsilon=%e\n",f1,f2,m,d,maxFloat32Epsilon);
     return (d <= maxFloat32Epsilon);
 }
 

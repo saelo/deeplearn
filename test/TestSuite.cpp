@@ -303,13 +303,13 @@ void RunLayerTests()
     Check((*cpu_result_tensor) == gpu_result_tensor->ToHost(), "Bias layer test failed");
 
     // fixme: insanely high error margin for convolution layer
-    const float convErr = 1;
+    const float convErr = 0.1;
     RunTest("Convolution layer (Forward)", cpu_result_tensor = &h_convolution.Forward(h_image1), gpu_result_tensor = &g_convolution.Forward(g_image1));
     Check(cpu_result_tensor->isAlmostEqual(gpu_result_tensor->ToHost(),convErr), "Convolution layer test failed");
 
     RunTest("Convolution layer (Backward)", cpu_result_tensor = &h_convolution.Backward(h_image2), gpu_result_tensor = &g_convolution.Backward(g_image2));
     Check(cpu_result_tensor->isAlmostEqual(gpu_result_tensor->ToHost(),convErr), "Convolution layer test failed");
-    Check(h_convolution.CurrentGradients().isAlmostEqual(g_convolution.CurrentGradients().ToHost()), "Convolution layer grad test failed");
+    Check(h_convolution.CurrentGradients().isAlmostEqual(g_convolution.CurrentGradients().ToHost(),convErr), "Convolution layer grad test failed");
 
 
     RunTest("2D Max-pooling layer (Forward)", cpu_result_tensor = &h_maxpool.Forward(h_image2), gpu_result_tensor = &g_maxpool.Forward(g_image2));
