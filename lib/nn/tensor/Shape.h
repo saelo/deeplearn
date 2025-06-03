@@ -19,10 +19,12 @@ namespace nn {
 class Shape {
   public:
     // no 'explicit' keyword here, initializer list literals should represent shapes.
-    Shape(std::initializer_list<size_t> l) : data_(l)
+    Shape(std::initializer_list<size_t> l)
     {
-        for (auto& d : data_) {
+	data_.clear();
+        for (auto& d : l) {
             Assert(d > 0);
+	    data_.push_back(d);
         }
     }
 
