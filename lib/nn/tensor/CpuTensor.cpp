@@ -78,7 +78,7 @@ string CPUTensor::ToString() const
     return stream.str();
 }
 
-bool CPUTensor::operator==(const CPUTensor& other) const
+bool CPUTensor::isAlmostEqual(const CPUTensor& other, float kFloat32Epsilon) const
 {
     if (shape() != other.shape())
         return false;
@@ -86,7 +86,7 @@ bool CPUTensor::operator==(const CPUTensor& other) const
     for (size_t i = 0; i < size(); i++) {
         float our = buffer_[i];
         float their = other.buffer_[i];
-        if (!floatEq(our, their))
+        if (!floatEq(our, their, kFloat32Epsilon))
             return false;
     }
 

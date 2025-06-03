@@ -295,27 +295,19 @@ class BaseTensor {
 };
 
 
-// GPU is using 32 bit floats, CPU is internally using 80 bit floats...
-constexpr float kFloatMaxAbsDiff = 0.001;
-constexpr float kFloatMaxRelDiff = 0.01;
-
 // Float comparison to use when comparing elements of a tensor.
 // Allows a certain percentual (of the maxium of f1 and f2) difference.
-inline bool floatEq(float f1, float f2)
+    inline bool floatEq(float f1, float f2, float kFloat32Epsilon = 1E-3)
 {
     if (f1 == f2)
         return true;
 
-    float max = std::fmax(std::fabs(f1), std::fabs(f2));
-    float diff = std::fabs(f1 - f2);
+    const double m = std::max(std::fabs(f1), std::fabs(f2));
+    const double d = std::fabs(f1 - f2);
+    const double maxFloat32Epsilon = kFloat32Epsilon * m;
+//    fprintf(stderr,"floatEq(%e,%e): m=%e, d=%e, maxFloat32Epsilon=%e\n",f1,f2,m,d,maxFloat32Epsilon);
 
-    if (max < 0.01) {
-        // Relative error doesn't work well near zero. Use absolute error.
-        return diff <= kFloatMaxAbsDiff;
-    } else {
-        // Relative error for larger floats.
-        return diff <= max * kFloatMaxRelDiff;
-    }
+    return (d <= maxFloat32Epsilon);
 }
 
 
