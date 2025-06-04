@@ -1,0 +1,9 @@
+MNIST demo
+
+Load the datasets from https://systemds.apache.org/datasets/mnist and
+copy them into this directory. Then do a `gunzip *gz` to extact them.
+
+Then run:
+```
+deeplearn
+```
