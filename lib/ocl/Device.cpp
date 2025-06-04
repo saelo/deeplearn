@@ -142,11 +142,11 @@ void Device::PrintBuildLog(cl_program Program)
     clGetProgramBuildInfo(Program, device_, CL_PROGRAM_BUILD_LOG, 0, NULL, &log_size);
 
     if (log_size > 1) {
-        string log(log_size, ' ');
+        string log(log_size+1, ' ');
         clGetProgramBuildInfo(Program, device_, CL_PROGRAM_BUILD_LOG, log_size, &log[0], NULL);
         log[log_size] = '\0';
 
-        if (log_size != 0) {
+        if (log_size > 2) {
             cout << "Build log:" << endl;
             cout << log << endl;
         }
