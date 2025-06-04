@@ -175,7 +175,7 @@ void RunConvolutionTests()
 {
     // Fixme: errors are generally small but then suddenly there is a large mismatch between
     // CPU and GPU!
-    float permittedError = 1; // Should be 0.01 or less.
+    float permittedError = 1E-2;
     // We need smaller input sizes if built without optimization...
 #if DEBUG
     size_t num_features=2, num_channels=2, width=33, height=33;
@@ -306,8 +306,8 @@ void RunLayerTests()
     RunTest("Bias layer (Backward)", cpu_result_tensor = &h_bias.Backward(h_bias_layer_gradients), gpu_result_tensor = &g_bias.Backward(g_bias_layer_gradiensts), 1000);
     Check((*cpu_result_tensor) == gpu_result_tensor->ToHost(), "Bias layer test failed");
 
-    // fixme: insanely high error margin for convolution layer
-    const float convErr = 0.1;
+    // fixme: high error margin for convolution layer
+    const float convErr = 1E-2;
     RunTest("Convolution layer (Forward)", cpu_result_tensor = &h_convolution.Forward(h_image1), gpu_result_tensor = &g_convolution.Forward(g_image1), 10);
     Check(cpu_result_tensor->isAlmostEqual(gpu_result_tensor->ToHost(),convErr), "Convolution layer test failed");
 
