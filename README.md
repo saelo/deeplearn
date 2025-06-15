@@ -1,5 +1,7 @@
 # Deep Learning
 
+**!This repository is archived, but there's an active fork at [berndporr/cl_cldl](https://github.com/berndporr/cl_cldl)!**
+
 ## What?
 
 A simple, lightweight, fully OpenCL capable toolkit for training artificial neural networks and doing some general tensor arithmetic.
