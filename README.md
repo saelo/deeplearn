@@ -144,16 +144,21 @@ network.Train(train_data_gpu, train_labels_gpu, test_data_gpu, test_labels_gpu, 
 
 ## Usage
 
-```bash
-# Fetch the MNIST dataset ..
-./fetch_mnist.sh
-
-# .. build everything ..
-mkdir build && cd build
-cmake ../
+### build everything
+```
+cmake .
 make
+```
 
-# .. and train!
+### test it
+```
+make test
+```
+
+### and train!
+```
+cd mnist
+fetch_mnist.sh
 ./deeplearn
 ```
 

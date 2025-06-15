@@ -1,5 +1,5 @@
-#include "utils/Mnist.h"
-#include "utils/File.h"
+#include "Mnist.h"
+#include "File.h"
 
 using namespace std;
 using namespace nn;

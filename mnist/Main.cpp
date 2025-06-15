@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "utils/Mnist.h"
+#include "Mnist.h"
 #include "utils/OpenCL.h"
 #include "nn/NN.h"
 
@@ -20,7 +20,7 @@ int main()
 
     // Load MNIST dataset.
     CPUTensor train_data, train_labels, test_data, test_labels;
-    bool mnist_loaded_successfully = utils::LoadMNIST("../mnist", &train_data, &train_labels, &test_data, &test_labels);
+    bool mnist_loaded_successfully = utils::LoadMNIST(".", &train_data, &train_labels, &test_data, &test_labels);
     Check(mnist_loaded_successfully, "Failed to load MNIST datasets. See fetch_mnist.sh");
 
     // Move data to the GPU.

@@ -92,7 +92,10 @@ class CPUTensor : public BaseTensor<CPUTensor> {
     //
     // Two tensors are considered equal if their shape is equal and
     // floatEq(x, y) is true for each pair of elements with same index.
-    bool operator==(const CPUTensor& other) const;
+    bool isAlmostEqual(const CPUTensor& other, float kFloat32Epsilon = 1E-3) const;
+    bool operator==(const CPUTensor& other) const {
+	return isAlmostEqual(other);
+    }
     bool operator!=(const CPUTensor& other) const;
 
     // Iterator support.

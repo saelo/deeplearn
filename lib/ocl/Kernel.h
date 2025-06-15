@@ -49,11 +49,20 @@ class Kernel {
 
     // Bind the next kernel argument.
     //
-    // This is supported for all primitive data types, as well as Buffer pointers and LocalMemory instances.
+    // This is supported for all primitive data types, as well as Buffer pointers.
     template <typename T>
     bool BindNextArgument(T value)
     {
         cl_int clErr = clSetKernelArg(kernel_, cur_index_, sizeof(T), (void *)&value);
+        CL_ENSURE_SUCCESS(clErr, "Failed to bind argument for kernel", false);
+        cur_index_++;
+        return true;
+    }
+
+    bool BindNextArgument(LocalMemory value)
+    {
+	const uint32_t sz = sizeof(float) * value.size;
+        cl_int clErr = clSetKernelArg(kernel_, cur_index_, sz, NULL);
         CL_ENSURE_SUCCESS(clErr, "Failed to bind argument for kernel", false);
         cur_index_++;
         return true;
